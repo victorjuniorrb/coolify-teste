@@ -1,5 +1,5 @@
 #!/bin/sh
-# Gera o HTML dinamicamente com as variáveis passadas pelo Coolify
+# Gera o HTML dinamicamente com as variáveis passadas pelo Coolify.
 echo "<html>
 <body style='font-family:sans-serif; background:#f4f4f4; padding:50px'>
     <div style='background:white; padding:20px; border-radius:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1)'>
