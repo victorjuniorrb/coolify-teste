@@ -7,7 +7,7 @@ echo "<html>
         <hr>
         <p><strong>Status:</strong> Online</p>
         <p><strong>Ambiente:</strong> $TARGET_ENV</p>
-        <p><strong>Versão do Build:</strong> $BUILD_VERSION</p>
+        <p><strong>Versao do Build:</strong> $BUILD_VERSION</p>
         <p><strong>ID do Container (Hostname):</strong> $(hostname)</p>
         <p><strong>Data/Hora do Sistema:</strong> $(date)</p>
     </div>
