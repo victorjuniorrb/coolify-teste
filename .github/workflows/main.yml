@@ -63,4 +63,4 @@ jobs:
     with:
       branch: ${{ github.ref_name }}
     secrets:
-      COOLIFY_DEPLOY_WEBHOOK_URL: ${{  secrets.COOLIFY_DEPLOY_WEBHOOK_URL}}
+      COOLIFY_DEPLOY_WEBHOOK_URL: ${{  secrets.COOLIFY_DEPLOY_WEBHOOK_URL }}
