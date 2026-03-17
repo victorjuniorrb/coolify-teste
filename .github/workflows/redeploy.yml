@@ -1,13 +1,13 @@
 name: Trigger Coolify Redeploy
 
 on:
-  workflow_run:
-    workflows: ["main.yml"]
-    types:
-      - completed
-    branches:
-      - main
-      - develop
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+    secrets:
+      COOLIFY_DEPLOY_WEBHOOK_URL: { required: true }
 
 jobs:
   redeploy:

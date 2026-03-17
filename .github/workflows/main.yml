@@ -6,9 +6,7 @@ name: Docker Build & Push CI
 
 on:
   push:
-    branches:
-      - "main"
-      - "develop"
+    branches: [main, develop]
   workflow_dispatch:
 
 jobs:
@@ -58,3 +56,11 @@ jobs:
             VERSION=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  redeploy:
+    needs: build-and-push
+    uses: ./.github/workflows/redeploy.yml
+    with:
+      branch: ${{ github.ref_name }}
+    secrets:
+      COOLIFY_DEPLOY_WEBHOOK_URL: ${{  secrets.COOLIFY_DEPLOY_WEBHOOK_URL}}
