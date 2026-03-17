@@ -84,6 +84,10 @@ function App() {
           ))}
         </ul>
       )}
+
+      <footer className="text-center text-muted mt-4">
+        <small>Versão: {process.env.REACT_APP_VERSION ? process.env.REACT_APP_VERSION.substring(0, 7) : 'dev'}</small>
+      </footer>
     </div>
   );
 }
