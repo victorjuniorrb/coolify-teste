@@ -1,0 +1,26 @@
+name: Trigger Coolify Redeploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches:
+      - main
+      - develop
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Call Coolify Deploy Webhook
+        env:
+          COOLIFY_DEPLOY_WEBHOOK_URL: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK_URL }}
+        run: |
+          if [ -z "$COOLIFY_DEPLOY_WEBHOOK_URL" ]; then
+            echo "COOLIFY_DEPLOY_WEBHOOK_URL secret not set. Skipping redeploy."
+            exit 0
+          else
+            curl -X POST "$COOLIFY_DEPLOY_WEBHOOK_URL"
+          fi
