@@ -2,7 +2,7 @@ name: Trigger Coolify Redeploy
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["Docker Build & Push CI"]
     types:
       - completed
     branches:
