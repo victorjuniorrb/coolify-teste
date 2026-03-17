@@ -5,6 +5,10 @@ COPY package*.json ./
 # Use npm ci for reproducible builds
 RUN npm ci
 COPY . .
+# Define o argumento que será passado durante o build
+ARG VERSION
+# Define a variável de ambiente para o build do React, usando o argumento
+ENV REACT_APP_VERSION=$VERSION
 RUN npm run build
 
 # Stage 2: Create the final image with the Node.js backend

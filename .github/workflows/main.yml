@@ -1,27 +1,60 @@
-name: CI Build
+# Nome do Workflow: CI de Build e Push Docker
+# Este workflow é acionado em pushes para as branches 'main' e 'develop'.
+# Ele constrói uma imagem Docker, gera tags dinamicamente e a envia para o GitHub Container Registry (ghcr.io).
+
+name: Docker Build & Push CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - "main"
+      - "develop"
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: read
+      packages: write # Necessário para fazer push para o ghcr.io
+
     steps:
-      - name: Checkout repository
+      - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: Login no GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extrair metadados (tags, labels) da imagem
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            # Gera a tag com o SHA do commit
+            type=sha
+            # Se a branch for main, gera a tag 'latest' e 'main'
+            type=ref,event=branch,pattern=main,prefix=,suffix=
+            type=raw,value=latest,enable={{is_default_branch}}
+            # Se a branch for develop, gera a tag 'develop'
+            type=ref,event=branch,pattern=develop,prefix=,suffix=
+
+      - name: Configurar Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
+      - name: Construir e enviar a imagem Docker
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
-          push: false # We are only building to test, not pushing
-          tags: user/app:test
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
