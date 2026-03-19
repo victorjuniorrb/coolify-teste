@@ -1,0 +1,5 @@
+version: '3.8'
+services:
+  app:
+    # Em produção, usa a imagem do registry, sobrescrevendo o 'build'
+    image: ghcr.io/victorjuniorrb/coolify-teste:${COOLIFY_BRANCH}
